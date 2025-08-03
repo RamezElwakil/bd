@@ -57,13 +57,15 @@ const allImagePaths = [
   '/public/picccc/Screenshot 2025-08-03 071952.png'
 ];
 
-const cardBack = 'https://via.placeholder.com/150/0000FF/FFFFFF?text=Card'; // Placeholder for card back image
+// No need for card back image anymore, we'll use CSS for the back color
 
 const MatchingGame = () => {
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
   const [canFlip, setCanFlip] = useState(true);
+  const [moves, setMoves] = useState(0);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     initializeGame();
@@ -71,10 +73,12 @@ const MatchingGame = () => {
 
   const initializeGame = () => {
     const shuffledImages = allImagePaths.sort(() => 0.5 - Math.random());
+    // Select 8 images for 4x4 grid (16 cards total)
     const selectedImages = shuffledImages.slice(0, 8);
     const gameImages = [...selectedImages, ...selectedImages];
     const shuffledGameImages = gameImages.sort(() => 0.5 - Math.random());
 
+    // Create cards with all initially unflipped
     setCards(
       shuffledGameImages.map((image, index) => ({
         id: index,
@@ -86,6 +90,8 @@ const MatchingGame = () => {
     setFlippedCards([]);
     setMatchedCards([]);
     setCanFlip(true);
+    setMoves(0);
+    setScore(0);
   };
 
   const handleCardClick = (clickedCard) => {
@@ -95,7 +101,15 @@ const MatchingGame = () => {
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     );
     setCards(newCards);
-    setFlippedCards((prev) => [...prev, clickedCard]);
+    
+    // Add the clicked card to flipped cards
+    const newFlippedCards = [...flippedCards, clickedCard];
+    setFlippedCards(newFlippedCards);
+    
+    // If this is the second card flipped, increment moves counter
+    if (newFlippedCards.length === 2) {
+      setMoves(prevMoves => prevMoves + 1);
+    }
   };
 
   useEffect(() => {
@@ -113,6 +127,8 @@ const MatchingGame = () => {
         );
         setFlippedCards([]);
         setCanFlip(true);
+        // Increment score when a match is found
+        setScore(prevScore => prevScore + 10);
       } else {
         // No match, flip back after a delay
         setTimeout(() => {
@@ -130,29 +146,53 @@ const MatchingGame = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Match the Pictures!</h1>
-      <div className="grid grid-cols-4 gap-4">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">Match the Pictures!</h1>
+      
+      {/* Game Stats */}
+      <div className="flex justify-center gap-8 mb-6">
+        <div className="text-center">
+          <div className="text-lg font-semibold text-gray-700">Moves</div>
+          <div className="text-2xl font-bold text-blue-600">{moves}</div>
+        </div>
+        <div className="text-center">
+          <div className="text-lg font-semibold text-gray-700">Score</div>
+          <div className="text-2xl font-bold text-green-600">{score}</div>
+        </div>
+      </div>
+      
+      {/* Game Grid */}
+      <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full max-w-4xl">
         {cards.map((card) => (
           <div
             key={card.id}
-            className={`relative w-32 h-32 bg-white rounded-lg shadow-md cursor-pointer transition-transform duration-300 transform ${card.isFlipped || card.isMatched ? 'rotate-y-180' : ''}`}
+            className="flip-card cursor-pointer"
             onClick={() => handleCardClick(card)}
-            style={{ perspective: '1000px' }}
           >
-            <div className={`absolute inset-0 backface-hidden rounded-lg flex items-center justify-center ${card.isFlipped || card.isMatched ? 'hidden' : ''}`}>
-              <img src={cardBack} alt="Card Back" className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className={`absolute inset-0 backface-hidden rounded-lg ${card.isFlipped || card.isMatched ? '' : 'rotate-y-180'}`}>
-              <img src={card.image} alt="Card Front" className="w-full h-full object-cover rounded-lg" />
+            <div className={`flip-card-inner ${card.isFlipped || card.isMatched ? 'flipped' : ''}`}>
+              <div className="flip-card-front rounded-lg flex items-center justify-center bg-pink-200 shadow-inner">
+                <span className="text-3xl text-pink-500">?</span>
+              </div>
+              <div className="flip-card-back rounded-lg">
+                <img src={card.image} alt="Card Front" className="w-full h-full object-cover rounded-lg" />
+              </div>
             </div>
           </div>
         ))}
       </div>
+      
+      {/* Game Completion Message */}
       {matchedCards.length === 8 && (
-        <div className="mt-8 text-2xl font-semibold text-green-600">
-          Congratulations! You matched all the pictures!
+        <div className="mt-8 p-4 bg-green-100 rounded-lg border border-green-200 text-center">
+          <div className="text-2xl font-semibold text-green-600 mb-2">
+            Congratulations! You matched all the pictures!
+          </div>
+          <div className="text-lg text-green-700">
+            You completed the game in {moves} moves with a score of {score}!
+          </div>
         </div>
       )}
+      
+      {/* Restart Button */}
       <button
         onClick={initializeGame}
         className="mt-8 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300"
@@ -163,4 +203,4 @@ const MatchingGame = () => {
   );
 };
 
-export default MatchingGame; 
+export default MatchingGame;

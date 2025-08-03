@@ -7,7 +7,7 @@ function Navigation({ currentPage, setCurrentPage }) {
     { id: 'home', name: 'Home', path: '/', icon: '🏠' },
     { id: 'memories', name: 'Memories', path: '/memories', icon: '📸' },
     { id: 'journal', name: 'Journal', path: '/journal', icon: '📝' },
-    { id: 'compliments', name: 'Cheer Up', path: '/compliments', icon: '💝' },
+    { id: 'compliments', name: 'Birthday Countdown', path: '/compliments', icon: '🎂' },
     { id: 'games', name: 'Games', path: '/games', icon: '🎮' },
   ]
 
@@ -32,7 +32,14 @@ function Navigation({ currentPage, setCurrentPage }) {
               }`}
             >
               <span className="text-xl mb-1">{item.icon}</span>
-              <span className="text-xs font-medium">{item.name}</span>
+              {item.id === 'compliments' ? (
+                <div className="text-xs font-medium text-center leading-tight">
+                  <div>Birthday</div>
+                  <div>Countdown</div>
+                </div>
+              ) : (
+                <span className="text-xs font-medium">{item.name}</span>
+              )}
             </Link>
           )
         })}
@@ -41,4 +48,4 @@ function Navigation({ currentPage, setCurrentPage }) {
   )
 }
 
-export default Navigation 
+export default Navigation

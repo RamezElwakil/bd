@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 
 function HomePage({ onSurpriseMe, setCurrentPage }) {
-  const [isHovered, setIsHovered] = useState(false)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [greeting, setGreeting] = useState('')
   const [ageStats, setAgeStats] = useState({
@@ -27,32 +26,38 @@ function HomePage({ onSurpriseMe, setCurrentPage }) {
     return () => clearInterval(timer)
   }, [])
 
-  // Calculate age statistics
+  // Calculate age statistics - more accurate calculation
   useEffect(() => {
     const calculateAge = () => {
       const now = new Date()
-      const birthDate = new Date(now.getFullYear() - 14, 0, 1) // Assuming 14 years old
+      // Set actual birth date - July 26, 2011
+      const birthDate = new Date(2011, 6, 26) // Note: month is 0-indexed, so 6 = July
       
+      // Calculate exact age
       const diffTime = Math.abs(now - birthDate)
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      const diffHours = Math.ceil(diffTime / (1000 * 60 * 60))
-      const diffMinutes = Math.ceil(diffTime / (1000 * 60))
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
+      const diffMinutes = Math.floor(diffTime / (1000 * 60))
+      const diffSeconds = Math.floor(diffTime / 1000)
       
-      // Calculate years and months
-      const years = 14
-      const months = years * 12
+      // Calculate years more accurately
+      const years = Math.floor(diffDays / 365.25)
+      const months = Math.floor(diffDays / 30.44)
+      const weeks = Math.floor(diffDays / 7)
       
       setAgeStats({
         years: years,
         months: months,
+        weeks: weeks,
         days: diffDays,
         hours: diffHours,
-        minutes: diffMinutes
+        minutes: diffMinutes,
+        seconds: diffSeconds
       })
     }
     
     calculateAge()
-    const ageTimer = setInterval(calculateAge, 60000) // Update every minute
+    const ageTimer = setInterval(calculateAge, 1000) // Update every second for more dynamic display
     
     return () => clearInterval(ageTimer)
   }, [])
@@ -61,189 +66,157 @@ function HomePage({ onSurpriseMe, setCurrentPage }) {
     {
       icon: '📸',
       title: 'Memory Lane',
-      description: 'Relive our precious moments together',
-      color: 'from-pink-400 to-rose-400',
+      description: 'Check out these embarrassing photos I dug up',
+      color: 'from-blue-400 to-indigo-500',
       path: '/memories'
     },
     {
       icon: '📖',
       title: 'My Journal',
-      description: 'Write your thoughts and feelings',
-      color: 'from-blue-400 to-indigo-400',
+      description: 'Write stuff down, I promise not to read it',
+      color: 'from-indigo-400 to-purple-500',
       path: '/journal'
     },
     {
-      icon: '✨',
-      title: 'Cheer Me Up!',
-      description: 'Get personalized compliments and encouragement',
-      color: 'from-purple-400 to-pink-400',
+      icon: '🎂',
+      title: 'Birthday Countdown',
+      description: 'See upcoming family birthdays',
+      color: 'from-purple-400 to-blue-500',
       path: '/compliments'
     },
     {
       icon: '🎮',
       title: 'Mini Games',
-      description: 'Have fun with interactive games',
-      color: 'from-green-400 to-teal-400',
+      description: 'I bet I can still beat you at these',
+      color: 'from-blue-500 to-indigo-600',
       path: '/games'
     }
   ]
 
   return (
     <div className="min-h-screen pb-20 relative overflow-hidden">
-      {/* Floating Background Elements */}
+      {/* Floating Background Elements - Blue Theme */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-16 h-16 bg-purple-200 rounded-full opacity-30 animate-bounce"></div>
-        <div className="absolute bottom-40 left-20 w-24 h-24 bg-blue-200 rounded-full opacity-25 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-12 h-12 bg-rose-200 rounded-full opacity-40 animate-bounce"></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-30 animate-bounce"></div>
+        <div className="absolute bottom-40 left-20 w-24 h-24 bg-purple-200 rounded-full opacity-25 animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-12 h-12 bg-blue-300 rounded-full opacity-40 animate-bounce"></div>
+        <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-indigo-100 rounded-full opacity-15 animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-28 h-28 bg-blue-100 rounded-full opacity-20 animate-bounce"></div>
       </div>
 
       {/* Hero Section */}
       <div className="relative z-10">
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center max-w-4xl mx-auto px-4">
-            {/* Animated Welcome Message */}
+            {/* Animated Welcome Message - Brother's Style */}
             <div className="mb-8">
-              <div className="text-2xl md:text-3xl font-light text-gray-600 mb-2 animate-fade-in">
-                {greeting}, Beautiful! 💕
+              <div className="text-2xl md:text-3xl font-light text-gray-700 mb-2 animate-fade-in flex items-center justify-center">
+                <span className="mr-2">{greeting},</span>
+                <span className="font-medium bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">Sis!</span>
+                <span className="ml-2 text-2xl">🤜🤛</span>
               </div>
-              <div className="text-sm text-gray-500 animate-fade-in-delay">
-                {currentTime.toLocaleTimeString('en-US', { 
-                  hour: '2-digit', 
-                  minute: '2-digit',
-                  hour12: true 
-                })}
+              <div className="text-sm text-gray-500 animate-fade-in-delay flex items-center justify-center">
+                <span className="mr-1">It's</span>
+                <span className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  {currentTime.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                  })}
+                </span>
+                <span className="ml-1">on your special day</span>
               </div>
             </div>
 
-            {/* Age Milestone Section */}
+            {/* Age Milestone Section - Redesigned with brother's perspective */}
             <div className="mb-12">
-              <div className="card max-w-4xl mx-auto transform hover:scale-105 transition-all duration-500">
-                <div className="text-center">
-                  <h2 className="text-2xl md:text-3xl font-handwriting text-gray-800 mb-6">
-                    You've Lived an Amazing Life! 🌟
+              <div className="card max-w-4xl mx-auto transform hover:scale-105 transition-all duration-500 relative overflow-hidden">
+                {/* Background pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 opacity-20"></div>
+                  <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-indigo-400 opacity-20"></div>
+                  <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-blue-400 opacity-20"></div>
+                </div>
+                
+                <div className="relative z-10 text-center">
+                  <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
+                    <span className="font-handwriting">The Epic Journey of</span>
+                    <span className="block text-3xl md:text-5xl bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent mt-1">My Little Sister</span>
                   </h2>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <p className="text-gray-600 mb-6 italic">"From annoying me as a kid to becoming someone I'm actually proud of"</p>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     {/* Years */}
-                    <div className="group">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <div className="group bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                      <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                         {ageStats.years}
                       </div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Years</div>
+                      <div className="text-sm md:text-base text-gray-700 font-medium">Years of Existence</div>
                     </div>
                     
-                    {/* Months */}
-                    <div className="group">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
-                        {ageStats.months.toLocaleString()}
+                    {/* Weeks */}
+                    <div className="group bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                      <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                        {ageStats.weeks?.toLocaleString() || Math.floor(ageStats.days/7).toLocaleString()}
                       </div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Months</div>
+                      <div className="text-sm md:text-base text-gray-700 font-medium">Weeks of Chaos</div>
                     </div>
                     
                     {/* Days */}
-                    <div className="group">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <div className="group bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                      <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-purple-500 to-blue-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                         {ageStats.days.toLocaleString()}
                       </div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Days</div>
+                      <div className="text-sm md:text-base text-gray-700 font-medium">Days of Adventure</div>
                     </div>
                     
                     {/* Hours */}
-                    <div className="group">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <div className="group bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300">
+                      <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                         {ageStats.hours.toLocaleString()}
                       </div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Hours</div>
-                    </div>
-                    
-                    {/* Minutes */}
-                    <div className="group">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-yellow-400 to-green-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
-                        {ageStats.minutes.toLocaleString()}
-                      </div>
-                      <div className="text-sm md:text-base text-gray-600 font-medium">Minutes</div>
+                      <div className="text-sm md:text-base text-gray-700 font-medium">Hours of Mayhem</div>
                     </div>
                   </div>
                   
-                  <div className="mt-6 text-sm text-gray-500">
-                    And every single moment has been precious! 💖
+                  {/* Live counter section */}
+                  <div className="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl p-4 shadow-inner mt-4">
+                    <p className="text-gray-700 mb-2 font-medium">Your life in real-time:</p>
+                    <div className="flex justify-center space-x-2 text-xl font-mono">
+                      <div className="bg-white rounded-md px-2 py-1 shadow">{Math.floor(ageStats.seconds / 86400).toString().padStart(2, '0')}</div>
+                      <div className="text-gray-700">:</div>
+                      <div className="bg-white rounded-md px-2 py-1 shadow">{Math.floor((ageStats.seconds % 86400) / 3600).toString().padStart(2, '0')}</div>
+                      <div className="text-gray-700">:</div>
+                      <div className="bg-white rounded-md px-2 py-1 shadow">{Math.floor((ageStats.seconds % 3600) / 60).toString().padStart(2, '0')}</div>
+                      <div className="text-gray-700">:</div>
+                      <div className="bg-white rounded-md px-2 py-1 shadow animate-pulse">{(ageStats.seconds % 60).toString().padStart(2, '0')}</div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">days : hours : minutes : seconds</p>
+                  </div>
+                  
+                  <div className="mt-6 text-gray-700 font-medium">
+                    And somehow, you've managed to become pretty awesome along the way.
+                    <span className="block text-sm text-blue-600 mt-1 font-normal">- Your occasionally impressed brother</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Main Hero Content */}
-            <div className="card max-w-3xl mx-auto transform hover:scale-105 transition-all duration-500">
-              <div className="relative">
-                {/* Floating Hearts Animation */}
-                <div className="absolute -top-4 -left-4 text-2xl animate-bounce">💖</div>
-                <div className="absolute -top-2 -right-4 text-xl animate-bounce delay-100">💝</div>
-                <div className="absolute -bottom-4 left-1/4 text-lg animate-bounce delay-200">💕</div>
-                
-                <div className="text-8xl md:text-9xl mb-6 animate-float">
-                  ✨
-                </div>
-                
-                <h1 className="text-5xl md:text-6xl font-handwriting text-gray-800 mb-6 leading-tight">
-                  Welcome to Our
-                  <span className="block bg-gradient-to-r from-pink-400 via-purple-400 to-rose-400 bg-clip-text text-transparent">
-                    Special Place
-                  </span>
-                </h1>
-                
-                <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-                  A digital sanctuary filled with love, memories, and little surprises 
-                  <span className="block text-pink-500 font-semibold">just for you</span>
-                </p>
-                
-                {/* Enhanced Surprise Me Button */}
-                <div className="relative">
-                  <button
-                    className={`px-12 py-6 rounded-full text-xl font-bold transition-all duration-500 transform ${
-                      isHovered 
-                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-rose-500 text-white shadow-2xl scale-110 rotate-1' 
-                        : 'bg-gradient-to-r from-pink-300 via-purple-300 to-rose-300 text-gray-700 hover:shadow-xl hover:scale-105'
-                    } relative overflow-hidden group`}
-                    onClick={onSurpriseMe}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                  >
-                    <span className="relative z-10 flex items-center space-x-3">
-                      <span className="text-2xl">🎁</span>
-                      <span>Surprise Me!</span>
-                      <span className="text-2xl">🎁</span>
-                    </span>
-                    
-                    {/* Button Shine Effect */}
-                    <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 ${
-                      isHovered ? 'animate-shine' : ''
-                    }`}></div>
-                  </button>
-                  
-                  {/* Sparkle Effects */}
-                  {isHovered && (
-                    <>
-                      <div className="absolute -top-2 -left-2 text-yellow-400 animate-ping">✨</div>
-                      <div className="absolute -top-2 -right-2 text-pink-400 animate-ping delay-100">💫</div>
-                      <div className="absolute -bottom-2 left-1/3 text-purple-400 animate-ping delay-200">⭐</div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+            {/* Main Hero Content Removed */}
           </div>
         </div>
       </div>
 
-      {/* Enhanced Feature Cards Section */}
+      {/* Enhanced Feature Cards Section - Brother's Style */}
       <div className="relative z-10 max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-handwriting text-gray-800 mb-4">
-            Explore Your Special Space
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <span className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">Check Out What I Made</span>
           </h2>
-          <p className="text-lg text-gray-600">
-            Choose your adventure or let us surprise you!
+          <p className="text-lg text-gray-700">
+            Click around and see what's cool, or hit that surprise button if you're feeling lucky
           </p>
         </div>
 
@@ -283,37 +256,10 @@ function HomePage({ onSurpriseMe, setCurrentPage }) {
         </div>
       </div>
 
-      {/* Enhanced Special Message Section */}
-      <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-        <div className="card transform hover:scale-105 transition-all duration-500">
-          <div className="relative">
-            {/* Floating Elements */}
-            <div className="absolute -top-6 -left-6 text-3xl animate-bounce">💝</div>
-            <div className="absolute -top-4 -right-6 text-2xl animate-bounce delay-300">💖</div>
-            <div className="absolute -bottom-6 left-1/4 text-2xl animate-bounce delay-500">💕</div>
-            
-            <div className="text-4xl mb-6">✨</div>
-            <h2 className="text-3xl md:text-4xl font-handwriting text-gray-800 mb-6">
-              A Special Message for You
-            </h2>
-            <div className="text-lg md:text-xl text-gray-600 leading-relaxed space-y-4">
-              <p>
-                Every moment with you is a treasure that I hold close to my heart. 
-                Your smile lights up my world, and your love makes every day special.
-              </p>
-              <p className="text-pink-600 font-semibold">
-                You are amazing, beautiful, and so very loved! 💕
-              </p>
-              <p className="text-sm text-gray-500">
-                This space is filled with little surprises to brighten your day and remind you of how special you are.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Special Message Section Removed */}
 
       {/* Custom CSS for animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -349,4 +295,4 @@ function HomePage({ onSurpriseMe, setCurrentPage }) {
   )
 }
 
-export default HomePage 
+export default HomePage

@@ -1,6 +1,6 @@
-# React + Tailwind CSS Project
+# Happy Birthday Judy
 
-This project demonstrates a working setup of React with Tailwind CSS, including comprehensive tests to ensure everything is functioning correctly.
+A special birthday celebration website created for Judy, featuring interactive games, birthday countdowns, and more.
 
 ## Features
 
@@ -51,6 +51,48 @@ npm test
 
 ```bash
 npm run test:ui
+```
+
+## Deployment
+
+### Deploying to GitHub
+
+1. Create a new repository on GitHub
+2. Initialize Git in your local project (if not already done)
+   ```bash
+   git init
+   ```
+3. Add all files to Git
+   ```bash
+   git add .
+   ```
+4. Commit the files
+   ```bash
+   git commit -m "Initial commit"
+   ```
+5. Add your GitHub repository as a remote
+   ```bash
+   git remote add origin https://github.com/yourusername/happy-birthday-judy.git
+   ```
+6. Push to GitHub
+   ```bash
+   git push -u origin main
+   ```
+
+### Deploying to Netlify
+
+1. Create an account on [Netlify](https://www.netlify.com/) if you don't have one
+2. Click "New site from Git"
+3. Select GitHub as your Git provider
+4. Authorize Netlify to access your GitHub account
+5. Select the "happy-birthday-judy" repository
+6. Configure the build settings:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+7. Click "Deploy site"
+8. Wait for the build to complete
+9. Your site will be available at a Netlify subdomain (e.g., https://happy-birthday-judy.netlify.app)
+10. You can set up a custom domain in the Netlify settings if desired
 ```
 
 ## What's Tested
@@ -128,4 +170,4 @@ The application includes several visual elements to test Tailwind CSS:
 
 ## Browser Support
 
-This project works in all modern browsers that support ES6 modules and CSS Grid. 
+This project works in all modern browsers that support ES6 modules and CSS Grid.

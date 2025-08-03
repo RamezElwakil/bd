@@ -1,7 +1,7 @@
 {
-  "name": "bd-react-tailwind",
+  "name": "happy-birthday-judy",
   "version": "1.0.0",
-  "description": "React project with Tailwind CSS",
+  "description": "A birthday celebration website for Judy",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
